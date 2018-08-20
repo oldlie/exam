@@ -5,9 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaperRequest {
-    private long id;
+public class VerifyStudentRequest {
+    private String examNumber;
+    private String name;
     private String number;
-    private String content;
-    private int status;
 }

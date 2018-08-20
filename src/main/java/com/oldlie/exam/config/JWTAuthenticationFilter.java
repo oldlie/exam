@@ -31,7 +31,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
         String header = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("ZShop ")) {
+        if (header == null || !header.startsWith("Exam ")) {
             chain.doFilter(request, response);
             return;
         }
@@ -49,7 +49,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             // parse the token.
             String username = Jwts.parser()
                     .setSigningKey("MyJwtSecret")
-                    .parseClaimsJws(token.replace("ZShop ", ""))
+                    .parseClaimsJws(token.replace("Exam ", ""))
                     .getBody()
                     .getSubject();
 

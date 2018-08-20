@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oldlie.exam.entity.User;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,37 +34,34 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
             throws AuthenticationException {
 
-        User user = new User();
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-        user.setUsername(username);
-        user.setPassword(password);
-        // User user = new ObjectMapper()
-        // .readValue(req.getInputStream(), User.class);
+        try {
+            User user = new ObjectMapper().readValue(req.getInputStream(), User.class);
+            System.out.println(authenticationManager.toString());
+            return authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>()));
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
 
-        return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>()));
     }
 
     // 用户成功登录后，这个方法会被调用，我们在这个方法里生成token
     @Override
-    protected void successfulAuthentication(HttpServletRequest req,
-                                            HttpServletResponse res,
-                                            FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
+            Authentication auth) throws IOException, ServletException {
 
         String token = Jwts.builder()
                 .setSubject(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 24 * 1000))
-                .signWith(SignatureAlgorithm.HS512, "MyJwtSecret")
-                .compact();
+                .signWith(SignatureAlgorithm.HS512, "MyJwtSecret").compact();
         res.addHeader("Authorization", "Exam " + token);
-        res.getWriter().print("{\"status\":0,\"message\":\"success\",\"token\":\""+ token +"\"}");
+        res.getWriter().print("{\"status\":0,\"message\":\"success\",\"token\":\"" + token + "\"}");
         res.getWriter().flush();
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
         System.out.println(failed.getLocalizedMessage());
         response.getWriter().print("{\"status\":1,\"message\":\"用户名或者密码不正确\"}");
         response.getWriter().flush();

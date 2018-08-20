@@ -3,6 +3,7 @@ package com.oldlie.exam.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,5 +31,8 @@ public class Exam implements Serializable {
     private long id;
     private String number;
     private Date start;
-    private int minus;
+    private int minute;
+    private int checkPaperTime;
+    @Column(columnDefinition = "int default 0 comment '考试状态0:初始状态；1：本次考试；2：已完成或者时间过期'")
+    private int status;
 }

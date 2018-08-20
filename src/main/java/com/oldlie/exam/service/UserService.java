@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.oldlie.exam.entity.Role;
 import com.oldlie.exam.entity.User;
+import com.oldlie.exam.repository.RoleRepository;
 import com.oldlie.exam.repository.UserRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
+    @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

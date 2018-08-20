@@ -9,5 +9,8 @@ public class StudentRequest {
     private long id;
     private String name;
     private String number;
+    private String examNumber;
     private int flag;
+    private long paperId;
+    private int isFinished;
 }

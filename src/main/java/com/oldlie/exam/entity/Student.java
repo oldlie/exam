@@ -2,6 +2,7 @@ package com.oldlie.exam.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,5 +30,12 @@ public class Student implements Serializable {
     private long id;
     private String name;
     private String number;
+    private String examNumber;
+    @Column(columnDefinition = "int default 0 comment '0:fixed;1:random'")
     private int flag;
+    @Column(columnDefinition = "bigint default 0")
+    private long paperId;
+    private String paperNumber;
+    @Column(columnDefinition = "int default 0 comment '0:没有交卷；1:已经交卷了'")
+    private int isFinished;
 }

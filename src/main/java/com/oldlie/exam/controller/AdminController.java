@@ -4,15 +4,18 @@ import com.oldlie.exam.entity.Exam;
 import com.oldlie.exam.entity.Paper;
 import com.oldlie.exam.entity.Student;
 import com.oldlie.exam.http.reponse.BaseResponse;
+import com.oldlie.exam.http.reponse.IdResponse;
 import com.oldlie.exam.http.reponse.ListResponse;
 import com.oldlie.exam.http.reponse.PageResponse;
 import com.oldlie.exam.http.request.ExamRequest;
 import com.oldlie.exam.http.request.IdRequest;
 import com.oldlie.exam.http.request.PageRequest;
 import com.oldlie.exam.http.request.PaperRequest;
+import com.oldlie.exam.http.request.PasswordRequest;
 import com.oldlie.exam.http.request.StudentRequest;
 import com.oldlie.exam.service.ManagerService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,18 +33,25 @@ public class AdminController {
     /**
      * @param managerService the managerService to set
      */
+    @Autowired
     public void setManagerService(ManagerService managerService) {
         this.managerService = managerService;
     }
 
+    @GetMapping("/init")
+    public BaseResponse init() {
+        BaseResponse response = new BaseResponse();
+        return response;
+    }
+
     @PostMapping("/paper")
     public BaseResponse storePaper(@RequestBody PaperRequest request) {
-        return this.managerService.storePaper(request.getId(), request.getNumber(), request.getContent());
+        return this.managerService.storePaper(request);
     }
 
     @DeleteMapping("/paper")
-    public BaseResponse deletePaper(@RequestBody IdRequest request) {
-        return this.managerService.deletePaper(request);
+    public BaseResponse deletePaper(@RequestParam long id) {
+        return this.managerService.deletePaper(id);
     }
 
     @GetMapping("/paper")
@@ -55,15 +65,19 @@ public class AdminController {
         return this.managerService.listPaper(request);
     }
 
+    @GetMapping("/exam/paper")
+    public ListResponse<Paper> activePaperList() {
+        return this.managerService.activePaperList();
+    }
+
     @PostMapping("/exam")
-    public BaseResponse storeExam(@RequestBody ExamRequest request) {
-        return this.managerService.storeExam(request.getId(), request.getNumber(), request.getStart(),
-                request.getMinus());
+    public IdResponse storeExam(@RequestBody ExamRequest request) {
+        return this.managerService.storeExam(request);
     }
 
     @DeleteMapping("/exam")
-    public BaseResponse deleteExam(@RequestBody IdRequest request) {
-        return this.managerService.deleteExam(request.getId());
+    public BaseResponse deleteExam(@RequestParam Long id) {
+        return this.managerService.deleteExam(id);
     }
 
     @GetMapping("/exam")
@@ -78,8 +92,8 @@ public class AdminController {
     }
 
     @PostMapping("/student")
-    public BaseResponse storeStudent(@RequestBody StudentRequest request) {
-        return this.managerService.addStudent(request.getId(), request.getName(), request.getNumber(), request.getFlag());
+    public IdResponse storeStudent(@RequestBody StudentRequest request) {
+        return this.managerService.addStudent(request);
     }
 
     @DeleteMapping("/student")
@@ -87,8 +101,13 @@ public class AdminController {
         return this.managerService.deleteStudent(request.getId());
     }
 
-    @GetMapping("/student/name")
+    @GetMapping("/student/exam")
     public ListResponse<Student> listStudentByNumber(@RequestParam String number) {
         return this.managerService.listStudentByExamNumber(number);
+    }
+
+    @PostMapping("/password")
+    public BaseResponse password(@RequestBody PasswordRequest request) {
+        return this.managerService.password(request);
     }
 }

@@ -11,5 +11,7 @@ public class ExamRequest {
     private long id;
     private String number;
     private Date start;
-    private int minus;
+    private int minute;
+    private int checkPaperTime;
+    private int status;
 }

@@ -28,6 +28,10 @@ public class Paper implements Serializable {
     @GeneratedValue
     private long id;
     private String number;
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
+    /**
+     * 考试状态0：可编辑；1：不可编辑
+     */
+    private int status;
 }
